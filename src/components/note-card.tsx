@@ -7,17 +7,23 @@ import { X } from 'lucide-react';
 
 interface DateCardProps {
   note: {
+    id: string;
     date: Date;
     content: string;
-  }
+  },
+  onNoteDeleted: (id: string) => void;
 }
 
-export function NoteCard({ note }: DateCardProps) {
+export function NoteCard({ note, onNoteDeleted }: DateCardProps) {
+  function deletedNote() {
+    return onNoteDeleted(note.id);
+  }
+
     return (
        <Dialog.Root>
          <Dialog.DialogTrigger className='rounded-md bg-slate-800 text-left flex flex-col gap-3 p-5 overflow-hidden relative outline-none focus-visible:ring-2 focus-visible:ring-lime-400 hover:ring-2 hover:ring-slate-600 cursor-pointer'>
           <span className='text-sm font-medium text-slate-300'>
-           {note.date.toISOString()}
+            {formatDistanceToNow(note.date, {locale: ptBR, addSuffix: true})}
           </span>
           <p className='text-sm leading-6 text-slate-400'>
             {note.content}
@@ -28,7 +34,7 @@ export function NoteCard({ note }: DateCardProps) {
 
         <Dialog.Portal>
           <Dialog.DialogOverlay className='inset-0 fixed bg-black/50' />
-          <Dialog.Content className='max-w-[640px] w-full h-[60vh] bg-slate-700 rounded-md outline-none overflow-hidden flex flex-col fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
+          <Dialog.Content className='inset-0 md:inset-auto md:max-w-[640px] w-full md:h-[60vh] bg-slate-700 md:rounded-md outline-none overflow-hidden flex flex-col fixed md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2'>
             <Dialog.Close className='absolute right-0 top-0 bg-slate-800 p-1.5 text-slate-400 hover:text-slate-100'>
               <X className='size-5' />
             </Dialog.Close>
@@ -42,7 +48,8 @@ export function NoteCard({ note }: DateCardProps) {
               </p>
             </div>
 
-            <button 
+            <button
+              onClick={deletedNote} 
               type='button'
               className='w-full bg-slate-800 py-4 text-center text-sm text-slate-300 font-medium outline-none group'            
             >
